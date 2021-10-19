@@ -1,0 +1,7 @@
+scrapy
+scrapy-selenium
+beautifulsoup4
+python-dotenv
+python-telegram-bot
+black
+flake8
