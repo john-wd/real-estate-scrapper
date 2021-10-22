@@ -5,3 +5,4 @@ python-dotenv
 python-telegram-bot
 black
 flake8
+sqlalchemy

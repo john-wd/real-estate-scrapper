@@ -4,15 +4,19 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
 
-class OlxNotifierSpiderMiddleware:
+class SQLSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
+
+    sql_engine: Engine
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -53,7 +57,7 @@ class OlxNotifierSpiderMiddleware:
             yield r
 
     def spider_opened(self, spider):
-        spider.logger.info('Spider opened: %s' % spider.name)
+        spider.logger.info("Spider opened: %s" % spider.name)
 
 
 class OlxNotifierDownloaderMiddleware:
@@ -100,4 +104,4 @@ class OlxNotifierDownloaderMiddleware:
         pass
 
     def spider_opened(self, spider):
-        spider.logger.info('Spider opened: %s' % spider.name)
+        spider.logger.info("Spider opened: %s" % spider.name)

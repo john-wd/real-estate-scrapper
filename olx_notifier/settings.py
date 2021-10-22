@@ -21,6 +21,7 @@ NEWSPIDER_MODULE = "olx_notifier.spiders"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 FEED_EXPORT_ENCODING = "utf8"
+DATABASE_URL = "sqlite:///ads.sqlite3"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -48,7 +49,8 @@ FEED_EXPORT_ENCODING = "utf8"
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'olx_notifier.middlewares.OlxNotifierSpiderMiddleware': 543,
+#     #    'olx_notifier.middlewares.OlxNotifierSpiderMiddleware': 543,
+#     "olx_notifier.middlewares.SQLSpiderMiddleware": 500,
 # }
 
 # Enable or disable downloader middlewares
@@ -68,9 +70,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'olx_notifier.pipelines.OlxNotifierPipeline': 300,
-# }
+ITEM_PIPELINES = {
+    "olx_notifier.pipelines.OlxPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
