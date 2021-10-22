@@ -1,7 +1,7 @@
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup, element
-from ..items import OlxItem
+from ..items import AdItem
 from datetime import datetime, timedelta
 
 
@@ -23,7 +23,8 @@ class OlxSpider(scrapy.Spider):
         ad_list = body.select("#ad-list li")
         # skips native ads
         for ad in filter(lambda x: not x.select("li > div"), ad_list):
-            olx_item = OlxItem()
+            olx_item = AdItem()
+            olx_item["source"] = self.name
             olx_item["date_collected"] = datetime.now()
             self.parse_ad_link(olx_item, ad)
             self.parse_ad_price(olx_item, ad)
@@ -31,7 +32,7 @@ class OlxSpider(scrapy.Spider):
             self.parse_ad_address(olx_item, ad)
             yield olx_item
 
-    def parse_ad_link(self, item: OlxItem, ad: element.Tag):
+    def parse_ad_link(self, item: AdItem, ad: element.Tag):
         bs_link = ad.select_one("a[data-lurker-detail='list_id']")
         item["title"] = bs_link["title"]
         item["id"] = bs_link["data-lurker_list_id"]
@@ -40,11 +41,11 @@ class OlxSpider(scrapy.Spider):
             seconds=int(bs_link["data-lurker_last_bump_age_secs"])
         )
 
-    def parse_ad_price(self, item: OlxItem, ad: element.Tag):
+    def parse_ad_price(self, item: AdItem, ad: element.Tag):
         item["price"] = ad.select_one(".sc-ifAKCX.eoKYee").text
 
-    def parse_ad_description(self, item: OlxItem, ad: element.Tag):
+    def parse_ad_description(self, item: AdItem, ad: element.Tag):
         item["specs"] = ad.select_one(".sc-1j5op1p-0.lnqdIU").text
 
-    def parse_ad_address(self, item: OlxItem, ad: element.Tag):
+    def parse_ad_address(self, item: AdItem, ad: element.Tag):
         item["address"] = ad.select_one(".sc-7l84qu-0.gmtqTp").text

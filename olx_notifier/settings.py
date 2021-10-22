@@ -8,6 +8,10 @@ from shutil import which
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BOT_NAME = "olx_notifier"
 
@@ -71,7 +75,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "olx_notifier.pipelines.OlxPipeline": 300,
+    "olx_notifier.pipelines.AdPipeline": 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -99,3 +103,6 @@ ITEM_PIPELINES = {
 SELENIUM_DRIVER_NAME = "firefox"
 SELENIUM_DRIVER_EXECUTABLE_PATH = which("geckodriver")
 SELENIUM_DRIVER_ARGUMENTS = ["-headless"]
+
+TELEGRAM_BOT_ID = getenv("TELEGRAM_BOT_ID")
+TELEGRAM_CHAT_ID = getenv("TELEGRAM_CHAT_ID")

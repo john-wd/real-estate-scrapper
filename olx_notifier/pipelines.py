@@ -5,19 +5,23 @@
 
 
 # useful for handling different item types with a single interface
+from typing import List
 from itemadapter import ItemAdapter
-from .items import OlxItem
+from .items import AdItem
 from sqlalchemy.engine import Engine, create_engine
 from datetime import datetime
+from .notifier import BaseNotifier, TelegramNotifier
 
 
-class OlxPipeline:
+class AdPipeline:
     tablename = "scrapy_olx"
-    item_cls = OlxItem
+    item_cls = AdItem
     sql_engine: Engine
+    notifiers: List[BaseNotifier]
 
-    def __init__(self, eng: Engine):
+    def __init__(self, eng: Engine, notifiers: List[BaseNotifier]):
         self.sql_engine = eng
+        self.notifiers = notifiers
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -25,7 +29,8 @@ class OlxPipeline:
             create_engine(
                 crawler.settings.get("DATABASE_URL", "sqlite3:///results.sqlite3"),
                 echo=True,
-            )
+            ),
+            [TelegramNotifier.new(crawler.settings)],
         )
 
     def open_spider(self, spider):
@@ -33,7 +38,12 @@ class OlxPipeline:
 
     def process_item(self, item, spider):
         self.insert_item(item)
+        self.notify(item)
         return item
+
+    def notify(self, item):
+        for notifier in self.notifiers:
+            notifier.send_message(item.markdown(), parse_mode="markdown")
 
     def init_table(self):
         stmt = "CREATE TABLE IF NOT EXISTS {table} ({fields});".format(
