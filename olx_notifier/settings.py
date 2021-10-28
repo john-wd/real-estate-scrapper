@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_NAME = "olx_notifier"
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0"
+)
 
 SPIDER_MODULES = ["olx_notifier.spiders"]
 NEWSPIDER_MODULE = "olx_notifier.spiders"
