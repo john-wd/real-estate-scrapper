@@ -1,7 +1,8 @@
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup, element
-from ..items import AdItem
+from ..db.models import AdItem
+from ..util import parse_price
 from datetime import datetime, timedelta
 
 
@@ -42,7 +43,9 @@ class OlxSpider(scrapy.Spider):
         )
 
     def parse_ad_price(self, item: AdItem, ad: element.Tag):
-        item["price"] = ad.select_one(".sc-ifAKCX.eoKYee").text
+        item["price"] = parse_price(
+            ad.select_one(".fnmrjs-7.erUydy").select_one(".sc-ifAKCX.eoKYee").text
+        )
 
     def parse_ad_description(self, item: AdItem, ad: element.Tag):
         item["specs"] = ad.select_one(".sc-1j5op1p-0.lnqdIU").text
