@@ -10,9 +10,10 @@ class OlxSpider(scrapy.Spider):
     name = "olx"
     allowed_domains = ["olx.com.br"]
     start_urls = [
-        # Alugueis de casas na grande florianopolis com 2 quartos e até R$1700,00, ordenado pelos mais recentes
-        "https://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/imoveis/aluguel/casas?pe=1700&ros=2&sd=2507&sd=2516&sd=2509&sd=2518&sd=2513&sd=2517&sd=2510&sd=2512&sd=2514&sd=2508&sd=2511&sd=2515&sf=1",
-        "https://sc.olx.com.br/florianopolis-e-regiao/continente/imoveis/aluguel/casas?pe=1700&ros=2&sf=1",
+        # Compra de terreno até R$500.000 com palavra chave 'hectar'
+        "https://sc.olx.com.br/norte-de-santa-catarina/imoveis/terrenos/lotes/compra?pe=500000&q=hectar",                     # Itajai + região
+        "https://sc.olx.com.br/florianopolis-e-regiao/outras-cidades/imoveis/terrenos/lotes/compra?pe=500000&q=hectar",       # interior da grande florianopolis
+        "https://sc.olx.com.br/florianopolis-e-regiao/grande-florianopolis/imoveis/terrenos/lotes/compra?pe=500000&q=hectar", # grande florianopolis
     ]
 
     def start_requests(self):
@@ -43,12 +44,22 @@ class OlxSpider(scrapy.Spider):
         )
 
     def parse_ad_price(self, item: AdItem, ad: element.Tag):
-        item["price"] = parse_price(
-            ad.select_one(".fnmrjs-7.erUydy").select_one(".sc-ifAKCX.eoKYee").text
-        )
+        sel = ad.select_one(".fnmrjs-7.erUydy").select_one(".sc-ifAKCX.eoKYee")
+        val = ""
+        if sel:
+            val = parse_price(sel.text)
+        item["price"] = val
 
     def parse_ad_description(self, item: AdItem, ad: element.Tag):
-        item["specs"] = ad.select_one(".sc-1j5op1p-0.lnqdIU").text
+        sel = ad.select_one(".sc-1j5op1p-0.lnqdIU")
+        val = ""
+        if sel:
+            val = sel.text
+        item["specs"] = val
 
     def parse_ad_address(self, item: AdItem, ad: element.Tag):
-        item["address"] = ad.select_one(".sc-7l84qu-0.gmtqTp").text
+        sel = ad.select_one(".sc-7l84qu-0.gmtqTp")
+        val = ""
+        if sel:
+            val = sel.text
+        item["address"] = val

@@ -7,20 +7,20 @@ from datetime import datetime
 from ..db.models import AdItem
 
 
-class ZapimoveisSpider(scrapy.Spider):
-    name = "zapimoveis"
-    allowed_domains = ["zapimoveis.com.br"]
-    api_url = "https://glue-api.zapimoveis.com.br/v2/listings"
+class VivaRealSpider(scrapy.Spider):
+    name = "vivareal"
+    allowed_domains = ["vivareal.com.br"]
+    api_url = "https://glue-api.vivareal.com/v2/listings"
     headers = {
-        "x-domain": "www.zapimoveis.com.br",
+        "x-domain": "www.vivareal.com.br",
     }
     options = {
         "bedrooms": 2,
         "priceMax": 1200,
         "business": "RENTAL",
         "usageTypes": "RESIDENTIAL",
-        "unitTypes": "HOME",
-        "unitTypesV3": "HOME",
+        "unitTypes": "APARTMENT,HOME",
+        "unitTypesV3": "APARTMENT,HOME",
         "categoryPage": "RESULT",
         "listingType": "USED",
         "size": 70,
